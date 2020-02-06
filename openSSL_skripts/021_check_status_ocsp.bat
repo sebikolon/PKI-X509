@@ -1,0 +1,1 @@
+openssl ocsp -CAfile certs/ca-chain.cert.pem -url http://127.0.0.1:2560 -resp_text  -issuer certs/intermediate.cert.pem  -cert certs/<userCertToValidate>.pem
