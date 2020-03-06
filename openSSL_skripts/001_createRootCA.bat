@@ -1,28 +1,50 @@
+::
+:: ***************************************************************************************
+::
+::		sebikolon PKI-X509
+::		https://sbuechler.de
+::		https://github.com/sebikolon/PKI-X509
+::
+::		Last Release: 06 March 2020	
+::
+:: ***************************************************************************************
+::
+
 @ECHO OFF
-SET _ORIGINDIR=%cd%
-SET /P _BASISPFAD= Geben Sie das zuvor angelegte Basisverzeichnis an (Z.B. C:\test):
 
-::SET /P CA_KEY_PASSWORD= Geben Sie ein Kennwort für das neue Schlüsselpaar an:
-
-if exist %_BASISPFAD%\openssl.cfg (
-    echo OK!
+		
+	ECHO PKI-X509 - Prepare Certification Authority (CA)
+	ECHO Copyright MIT
+	ECHO https://sbuechler.de
+	ECHO.
 	
-	cd %_BASISPFAD%
-	::  Erstellen der Root-CA :: 
-	echo #### Erstellen der Root-CA #### 
-	openssl genrsa -aes256 -out private\ca.key.pem 4096
+	SET _ORIGINDIR=%cd%
+	ECHO # Please choose the base directory you defined before (e.g. 'C:\myPKI').
+	SET /P _BASISPFAD= Type, then press ENTER:
 	
-	openssl req -config openssl.cfg  -key private\ca.key.pem  -new -x509 -days 7300 -sha256 -extensions v3_ca  -out certs\ca.cert.pem 
-	cd ..
+	cd /d %_BASISPFAD%
 	
-) else (
-    echo NOTOK!
-)
+	ECHO.
+	ECHO # Creating ROOT CA and according files ..
+	
+	if exist openssl.cfg (
+	
+		openssl genrsa -aes256 -out private\ca.key.pem 4096	
+		openssl req -config openssl.cfg  -key private\ca.key.pem  -new -x509 -days 7300 -sha256 -extensions v3_ca  -out certs\ca.cert.pem 
+	
+		ECHO.
+		ECHO    .. OK!
+		ECHO # In order to proceed with the creation of the intermediate CA, please run next script
+		ECHO.
+	) else (
+		ECHO    .. Error! File '%_BASISPFAD%\openssl.cfg' does not exist or is missing valid paths!
+		ECHO.
+		ECHO # Please try again.
+		ECHO.
+	)
 
-:: Wechsle zurück zum Ursprungsverzeichnis
-cd %_ORIGINDIR%
-
-echo Erfolg!
+	:: Go back to original directory
+	cd %_ORIGINDIR%
 
 pause
 
