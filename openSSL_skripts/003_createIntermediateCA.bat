@@ -26,7 +26,7 @@
 	
 
 	if exist %_BASISPFAD%\%_INTER%\%_INTERCONFIG% (		
-		cd %_BASISPFAD%
+		cd /d %_BASISPFAD%
 		
 		ECHO.
 		ECHO # Creating INTERMEDIATE CA ..

@@ -30,7 +30,7 @@
     ::  Create a server certificate :: 
     ECHO.
 	ECHO # Creating a server certificate ..    
-    cd %_BASISPFAD%
+    cd /d %_BASISPFAD%
 
     :: Workaround: Create an 'index.txt.attr' file
     echo unique_subject = yes/no > %_INTER%\index.txt.attr

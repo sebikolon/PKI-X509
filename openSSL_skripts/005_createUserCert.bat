@@ -18,7 +18,7 @@
 	ECHO https://sbuechler.de
 	ECHO.
 
- SET _ORIGINDIR=%cd%
+    SET _ORIGINDIR=%cd%
     SET _INTER=intermediate
     SET _INTERCONFIG=openssl_inter.cfg
 	ECHO # Please choose the base directory you defined before (e.g. 'C:\myPKI').
@@ -34,7 +34,7 @@
     ::  Create a client certificate :: 
     ECHO.
 	ECHO # Creating a client certificate ..  
-    cd %_BASISPFAD%
+    cd /d %_BASISPFAD%
 
      ::  Create a key pair :: 
     openssl genrsa  -out %_INTER%\private\%_CERTNAME%.key.pem 2048
