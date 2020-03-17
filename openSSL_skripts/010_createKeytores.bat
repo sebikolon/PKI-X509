@@ -1,38 +1,76 @@
+::
+:: ***************************************************************************************
+::
+::		sebikolon PKI-X509
+::		https://sbuechler.de
+::		https://github.com/sebikolon/PKI-X509
+::
+::		Last Release: 16 March 2020	
+::
+:: ***************************************************************************************
+::
+
 @ECHO OFF
 
-SET _ORIGINDIR=%cd%
-SET _INTER=intermediate
+		
+	ECHO PKI-X509 - Create PKCS12 keystores 
+	ECHO Copyright MIT
+	ECHO https://sbuechler.de
+	ECHO.
 
-echo Führen Sie dieses Skript für jedes Zertifikat aus, für das Sie einen Keystore erhalten möchten.
+ 	SET _ORIGINDIR=%cd%
+    SET _INTER=intermediate
 
-SET /P _BASISPFAD= Geben Sie das zuvor angelegte Basisverzeichnis an (Z.B. C:\test):
-SET /P _CERTNAME= Erstellen Sie einen Keystore für das entsprechende Schlüsselpaar. Geben Sie den Namen des zuvor erstellen Zertifikats an (Z.B. server):
-SET /P _KEYSTORENAME= Geben Sie den Namen des neuen Keystores an:
+	ECHO # Run this script for each certificate, you want to create a keystore for.
 
-cd %_BASISPFAD%
+	ECHO # Please choose the base directory you defined before (e.g. 'C:\myPKI').
+	SET /P _BASISPFAD= Type, then press ENTER:
 
-::  Erstellen eines PKCS12 Keystores :: 
-echo #### Erstellen eines PKCS12 Keystores und Konvertierung zu JKS #### 
+    ECHO # Now please choose the name of your previously created client certificate (e.g. 'myClientCert').
+	SET /P _CERTNAME= Type, then press ENTER:
 
-if exist %_INTER%\keystores (
-	echo Verzeichnis bereits vorhanden.
-) else (
-    mkdir %_INTER%\keystores
-	echo Verzeichnis wurde erstellt.
-)
-
-openssl pkcs12 -export -in %_INTER%\certs\%_CERTNAME%.cert.pem -inkey %_INTER%\private\%_CERTNAME%.key.pem -chain -CAfile %_INTER%\certs\ca-chain.cert.pem -name %_KEYSTORENAME% -out %_INTER%\keystores\%_KEYSTORENAME%.p12
+    ECHO # Now please choose the name of the new keystore (e.g. 'myClientKeystore').
+	SET /P _KEYSTORENAME= Type, then press ENTER:
 
 
-::  Erstellen eines Java-Keystores auf Basis des .p12-Keystores :: 
- "c:\Program Files\Java\jre1.8.0_172\bin\keytool.exe" -importkeystore -destkeystore %_INTER%\keystores\%_KEYSTORENAME%.jks -srckeystore %_INTER%\keystores\%_KEYSTORENAME%.p12 -srcstoretype PKCS12
+	cd /d %_BASISPFAD%
 
-:: Import der CA Trust Chain
-"c:\Program Files\Java\jre1.8.0_172\bin\keytool.exe" -import -file %_INTER%\certs\ca-chain.cert.pem -alias ca-chain -keystore %_INTER%\keystores\%_KEYSTORENAME%.jks
- 
-:: Wechsle zurück zum Ursprungsverzeichnis
-cd %_ORIGINDIR%
- 
- echo Erfolg!
+	:: Create a new PKCS12 keystore :: 
+	echo # Creating a PKCS12 keystore ..
+	if exist %_INTER%\keystores (
+		ECHO.
+		echo # Directory '%_BASISPFAD%\%_INTER%\keystores' already exists ..
+	) else (
+		mkdir %_INTER%\keystores
+		ECHO.
+		echo # Directory '%_BASISPFAD%\%_INTER%\keystores' was successfully created ..
+	)
+	openssl pkcs12 -export -in %_INTER%\certs\%_CERTNAME%.cert.pem -inkey %_INTER%\private\%_CERTNAME%.key.pem -chain -CAfile %_INTER%\certs\ca-chain.cert.pem -name %_KEYSTORENAME% -out %_INTER%\keystores\%_KEYSTORENAME%.p12
+
+	:: Create a Java keystore, based on the .p12 keystore ::
+	if exist "c:\Program Files\Java\jre1.8.0_172\bin\keytool.exe" ( 
+		ECHO.
+		echo # Converting to a JKS keystore ..
+	 	"c:\Program Files\Java\jre1.8.0_172\bin\keytool.exe" -importkeystore -destkeystore %_INTER%\keystores\%_KEYSTORENAME%.jks -srckeystore %_INTER%\keystores\%_KEYSTORENAME%.p12 -srcstoretype PKCS12
+	) else (
+		ECHO.
+		ECHO # Tool 'keytool.exe' located under 'c:\Program Files\Java\jre1.8.0_172\bin\keytool.exe' could not be found.
+	)
+
+	:: Import of the CA Trust Chain
+	if exist "c:\Program Files\Java\jre1.8.0_172\bin\keytool.exe" ( 
+		ECHO.
+		echo # Importing the CA trust chain to the JKS keystore ..
+		"c:\Program Files\Java\jre1.8.0_172\bin\keytool.exe" -import -file %_INTER%\certs\ca-chain.cert.pem -alias ca-chain -keystore %_INTER%\keystores\%_KEYSTORENAME%.jks
+	) else (
+		ECHO.
+		ECHO # Tool 'keytool.exe' located under 'c:\Program Files\Java\jre1.8.0_172\bin\keytool.exe' could not be found.
+	)
+
+	:: Go back to original directory
+	cd %_ORIGINDIR%
+
+	ECHO    .. OK!
+	ECHO.	  
 
  pause

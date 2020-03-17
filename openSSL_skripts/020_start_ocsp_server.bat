@@ -1,14 +1,49 @@
+::
+:: ***************************************************************************************
+::
+::		sebikolon PKI-X509
+::		https://sbuechler.de
+::		https://github.com/sebikolon/PKI-X509
+::
+::		Last Release: 17 March 2020	
+::
+:: ***************************************************************************************
+::
+
 @ECHO OFF
 
-SET _ORIGINDIR=%cd%
-SET _INTER=intermediate
-SET _INTERCONFIG=openssl_inter.cfg
+		
+	ECHO PKI-X509 - Start the OCSP responder
+	ECHO Copyright MIT
+	ECHO https://sbuechler.de
+	ECHO.
 
-SET /P _BASISPFAD= Geben Sie das zuvor angelegte Basisverzeichnis an (Z.B. C:\test):
-SET /P _OCSPCERT= Geben Sie den Namen des zuvor erstellten OCSP-Zertifikat an (Z.B. 'ocsp.localhost'):
-SET /P _PORT= Geben Sie den Port an, unter dem der OCSP-Responder erreichbar sein soll (Z.B. 2560):
+    SET _ORIGINDIR=%cd%
+    SET _INTER=intermediate
+    SET _INTERCONFIG=openssl_inter.cfg
+	ECHO # Please choose the base directory you defined before (e.g. 'C:\myPKI').
+	SET /P _BASISPFAD= Type, then press ENTER:
 
-:: Starten des OCSP-Responders :: 
-echo #### Starten des OCSP-Responders #### 
+    ECHO # Now please type the name of the previously created OCSP responder certificate (e.g. 'ocsp.myDomain.com').
+	SET /P _OCSPCERT= Type, then press ENTER:
 
-openssl ocsp -index %_BASISPFAD%\%_INTER%\index.txt -port %_PORT% -rkey %_BASISPFAD%\%_INTER%\private\%_OCSPCERT%.key.pem -rsigner %_BASISPFAD%\%_INTER%\certs\%_OCSPCERT%.cert.pem -CA %_BASISPFAD%\%_INTER%\certs\ca-chain.cert.pem -text 
+    ECHO # Now please type the port number which should be assigned to the OCSP responder service (e.g. '2560').
+	SET /P _PORT= Type, then press ENTER:
+
+
+    :: Starting the OCSP responders service :: 
+    ECHO.
+    ECHO # Starting the OCSP responders service ..
+    ECHO # .. Do NOT close this window! ..
+
+    openssl ocsp -index %_BASISPFAD%\%_INTER%\index.txt -port %_PORT% -rkey %_BASISPFAD%\%_INTER%\private\%_OCSPCERT%.key.pem -rsigner %_BASISPFAD%\%_INTER%\certs\%_OCSPCERT%.cert.pem -CA %_BASISPFAD%\%_INTER%\certs\ca-chain.cert.pem -text 
+
+
+    :: Go back to original directory
+	cd %_ORIGINDIR%
+
+	ECHO    .. OK!        
+	ECHO.	  
+
+ pause
+
