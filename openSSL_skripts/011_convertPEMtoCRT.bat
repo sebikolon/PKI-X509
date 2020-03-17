@@ -1,20 +1,44 @@
+::
+:: ***************************************************************************************
+::
+::		sebikolon PKI-X509
+::		https://sbuechler.de
+::		https://github.com/sebikolon/PKI-X509
+::
+::		Last Release: 17 March 2020	
+::
+:: ***************************************************************************************
+::
+
 @ECHO OFF
 
-SET _ORIGINDIR=%cd%
-SET _INTER=intermediate
-SET _INTERCONFIG=openssl_inter.cfg
+		
+	ECHO PKI-X509 - Convert certificate from .PEM to .CRT
+	ECHO Copyright MIT
+	ECHO https://sbuechler.de
+	ECHO.
 
-SET /P _BASISPFAD= Geben Sie das zuvor angelegte Basisverzeichnis an (Z.B. C:\test):
-SET /P _CERTNAME= Geben Sie den Namen des zu konvertierenden Zertifikats an (Z.B. server):
+ 	SET _ORIGINDIR=%cd%
+    SET _INTER=intermediate
+    SET _INTERCONFIG=openssl_inter.cfg
+	ECHO # Please choose the base directory you defined before (e.g. 'C:\myPKI').
+	SET /P _BASISPFAD= Type, then press ENTER:
 
-::  Erstellen eines Server-Zertifikats :: 
-echo #### Konvertieren des Zertifikats ####
+    ECHO # Now please choose the name of the certificate to be converted (e.g. 'myClientCert').
+	SET /P _CERTNAME= Type, then press ENTER:
 
-openssl x509 -outform der -in %_BASISPFAD%\%_INTER%\certs\%_CERTNAME%.cert.pem -out %_BASISPFAD%\%_INTER%\certs\%_CERTNAME%.crt
 
-:: Wechsle zurück zum Ursprungsverzeichnis
-cd %_ORIGINDIR%
+    :: Convert the certificate from PEM to CRT :: 
+    ECHO.
+    ECHO # Converting the certificate from .PEM to .CRT ..
 
-echo Erfolg!
+    openssl x509 -outform der -in %_BASISPFAD%\%_INTER%\certs\%_CERTNAME%.cert.pem -out %_BASISPFAD%\%_INTER%\certs\%_CERTNAME%.crt
 
-pause
+    :: Go back to original directory
+	cd %_ORIGINDIR%
+
+	ECHO    .. OK!
+    ECHO # The converted certificate was stored here: '%_BASISPFAD%\%_INTER%\certs\%_CERTNAME%.crt'
+	ECHO.	  
+
+ pause
