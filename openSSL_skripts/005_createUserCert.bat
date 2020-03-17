@@ -13,7 +13,7 @@
 @ECHO OFF
 
 		
-	ECHO PKI-X509 - Prepare Certification Authority (CA)
+	ECHO PKI-X509 - Create user certificates
 	ECHO Copyright MIT
 	ECHO https://sbuechler.de
 	ECHO.
