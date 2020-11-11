@@ -28,58 +28,71 @@
     ECHO.
 	ECHO # Creating INTERMEDIATE CA and according files ..    
     mkdir %_BASISPFAD%\%_INTER%
-    cd %_BASISPFAD%\%_INTER%
+    cd /d %_BASISPFAD%\%_INTER%
     
     if exist certs (
-		echo    '%_BASISPFAD%\%_INTER%\certs' already exists. Skipping .. 
+		echo    '%cd%\certs' already exists. Skipping .. 
 	) else (
 		mkdir certs
 	)
 	
 	if exist crl (
-		echo    '%_BASISPFAD%\%_INTER%\crl' already exists. Skipping .. 
+		echo    '%cd%\crl' already exists. Skipping .. 
 	) else (
 		mkdir crl
 	)
 	
 	if exist newcerts (
-		echo    '%_BASISPFAD%\%_INTER%\newcerts' already exists. Skipping .. 
+		echo    '%cd%\newcerts' already exists. Skipping .. 
 	) else (
 		mkdir newcerts
 	)
 	
 	if exist private (
-		echo    '%_BASISPFAD%\%_INTER%\private' already exists. Skipping .. 
+		echo    '%cd%\private' already exists. Skipping .. 
 	) else (
 		mkdir private
 	)
 	
 	if exist csr (
-		echo    '%_BASISPFAD%\%_INTER%\csr' already exists. Skipping .. 
+		echo    '%cd%\csr' already exists. Skipping .. 
 	) else (
 		mkdir csr
 	)
 
 	:: Container that holds PKI structure
 	if exist index.txt (
-		echo    '%_BASISPFAD%\%_INTER%\index.txt' already exists. Skipping .. 
+		echo    '%cd%\index.txt' already exists. Skipping .. 
 	) else (
 		type NUL > index.txt
 	)
 	
 	:: File that holds latest serial number
 	if exist serial (
-		echo    '%_BASISPFAD%\%_INTER%\serial' already exists. Skipping .. 
+		echo    '%cd%\serial' already exists. Skipping .. 
 	) else (
 		echo 01 > serial
-	)    
+	)       
 
-    :: Go back to original directory
-	cd %_ORIGINDIR%
+	:: Copy INTERMEDIATE CA config file
+	xcopy /y %_ORIGINDIR%\%_INTERCONFIG% %cd%
 
-	ECHO    .. OK!
+	:: Replace placeholder path by valid path
+	(for /f "tokens=* delims==" %%a in (%_ORIGINDIR%\%_INTERCONFIG%) do (
+    if "%%a" == "dir               = C:/<path_to_your_pki_dir>/intermediate" (
+            echo dir               = %cd%
+
+    ) else (
+        echo %%a
+    )    
+	))> %cd%\%_INTERCONFIG%
+
 	ECHO.
-	ECHO # In order to proceed, please copy the file ''%_INTERCONFIG%' into folder '%_BASISPFAD%\%_INTER%' and adjust the paths within this file!
-	ECHO.    
+	ECHO    .. OK!
+	ECHO # In order to proceed with the creation of the INTERMEDIATE CA, please run next script!
+	ECHO.
+
+	 :: Go back to original directory
+	cd /d %_ORIGINDIR%    
 
 pause

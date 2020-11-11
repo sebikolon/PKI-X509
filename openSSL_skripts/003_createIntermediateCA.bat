@@ -5,7 +5,7 @@
 ::		https://sbuechler.de
 ::		https://github.com/sebikolon/PKI-X509
 ::
-::		Last Release: 16 March 2020	
+::		Last Release: 11 November 2020	
 ::
 :: ***************************************************************************************
 ::
@@ -24,24 +24,26 @@
 	ECHO # Please choose the base directory you defined before (e.g. 'C:\myPKI').
 	SET /P _BASISPFAD= Type, then press ENTER:
 	
+	cd /d %_BASISPFAD%	
 
-	if exist %_BASISPFAD%\%_INTER%\%_INTERCONFIG% (		
-		cd /d %_BASISPFAD%
-		
+	if exist %cd%\%_INTER%\%_INTERCONFIG% (		
+						
 		ECHO.
 		ECHO # Creating INTERMEDIATE CA ..
-		ECHO # Do NOT forget to define a commonName (CN)! ..				
+		::ECHO # Do NOT forget to define a commonName (CN) ..				
+		ECHO CREATE key .. 
 		::  Create key
-		openssl genrsa -aes256 -out %_INTER%\private\intermediate.key.pem 4096
+		openssl genrsa -aes256 -out %cd%\%_INTER%\private\intermediate.key.pem 4096
+		ECHO CREATE CSR ..
 		::  Create CSR 
-		openssl req -config %_INTER%\%_INTERCONFIG% -new -sha256  -key %_INTER%\private\intermediate.key.pem  -out %_INTER%\csr\intermediate.csr.pem
+		openssl req -config %cd%\%_INTER%\%_INTERCONFIG% -new -sha256  -key %cd%\%_INTER%\private\intermediate.key.pem  -out %cd%\%_INTER%\csr\intermediate.csr.pem
 		::  Sign CSR by Root CA 
-		openssl ca -config openssl.cfg -extensions v3_intermediate_ca -days 3650 -notext -md sha256  -in %_INTER%\csr\intermediate.csr.pem  -out %_INTER%\certs\intermediate.cert.pem
+		openssl ca -config openssl.cfg -extensions v3_intermediate_ca -days 3650 -notext -md sha256  -in %cd%\%_INTER%\csr\intermediate.csr.pem  -out %cd%\%_INTER%\certs\intermediate.cert.pem
 
 		::  Create a Chain Of Trust :: 
 		ECHO.
 		ECHO # Creating a CHAIN OF TRUST ..		
-		type %_INTER%\certs\intermediate.cert.pem certs\ca.cert.pem > %_INTER%\certs\ca-chain.cert.pem
+		type %cd%\%_INTER%\certs\intermediate.cert.pem %cd%\certs\ca.cert.pem > %cd%\%_INTER%\certs\ca-chain.cert.pem
 		
 		ECHO    .. OK!
 		ECHO.
@@ -49,13 +51,13 @@
 		ECHO.  	
 		
 	) else (
-		ECHO    .. Error! File '%_BASISPFAD%\%_INTER%\%_INTERCONFIG%' does not exist or is missing valid paths!
+		ECHO    .. Error! File '%cd%\%_INTER%\%_INTERCONFIG%' does not exist or is missing valid paths!
 		ECHO.
 		ECHO # Please try again.		
 	)
 
  :: Go back to original directory
-	cd %_ORIGINDIR%
+	cd /d %_ORIGINDIR%
 	
 	  
 
