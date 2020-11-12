@@ -33,22 +33,22 @@
     cd /d %_BASISPFAD%
 
     :: Workaround: Create an 'index.txt.attr' file
-    echo unique_subject = yes/no > %_INTER%\index.txt.attr
+    echo unique_subject = yes/no > %cd%\%_INTER%\index.txt.attr
 
     :: Create a key pair
-    openssl genrsa  -out %_INTER%\private\%_CERTNAME%.key.pem 2048
+    openssl genrsa  -out %cd%\%_INTER%\private\%_CERTNAME%.key.pem 2048
     :: Create a CSR (Certificate Signing Request)
-    openssl req -config %_INTER%\%_INTERCONFIG%  -key %_INTER%\private\%_CERTNAME%.key.pem  -new -sha256 -out %_INTER%\csr\%_CERTNAME%.csr.pem
+    openssl req -config %cd%\%_INTER%\%_INTERCONFIG%  -key %cd%\%_INTER%\private\%_CERTNAME%.key.pem  -new -sha256 -out %cd%\%_INTER%\csr\%_CERTNAME%.csr.pem
     :: Sign a certificate, based on the CSR
-    openssl ca -config %_INTER%\%_INTERCONFIG%  -extensions server_cert -days 375 -notext -md sha256  -in %_INTER%\csr\%_CERTNAME%.csr.pem  -out %_INTER%\certs\%_CERTNAME%.cert.pem
+    openssl ca -config %cd%\%_INTER%\%_INTERCONFIG%  -extensions server_cert -days 375 -notext -md sha256  -in %cd%\%_INTER%\csr\%_CERTNAME%.csr.pem  -out %cd%\%_INTER%\certs\%_CERTNAME%.cert.pem
 
     ::  Create a CRL (Certificate Revocation List) :: 
     ECHO # Creating a CRL (Certificate Revocation List) ..
-    if exist %_INTER%\crlnumber (
+    if exist %cd%\%_INTER%\crlnumber (
         ECHO # CRL already exists. Skipping ..	    
     ) else (        
-        echo 1000 > %_INTER%\crlnumber
-        openssl ca -config %_INTER%\%_INTERCONFIG%  -gencrl -out %_INTER%\crl\intermediate.crl.pem
+        echo 1000 > %cd%\%_INTER%\crlnumber
+        openssl ca -config %cd%\%_INTER%\%_INTERCONFIG%  -gencrl -out %cd%\%_INTER%\crl\intermediate.crl.pem
     )
 
     :: Go back to original directory

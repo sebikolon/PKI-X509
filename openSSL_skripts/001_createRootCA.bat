@@ -41,17 +41,17 @@
 	
 		ECHO.
 		ECHO    .. OK!
-		ECHO # In order to proceed with the creation of the intermediate CA, please run next script!
+		ECHO # In order to proceed with the preparation of the intermediate CA, please run next script!
 		ECHO.
 	) else (
-		ECHO    .. Error! File '%_BASISPFAD%\openssl.cfg' does not exist or is missing valid paths!
+		ECHO    .. Error! File '%cd%\openssl.cfg' does not exist or is missing valid paths!
 		ECHO.
 		ECHO # Please try again.
 		ECHO.
 	)
 
 	:: Go back to original directory
-	cd %_ORIGINDIR%
+	cd /d %_ORIGINDIR%
 
 pause
 

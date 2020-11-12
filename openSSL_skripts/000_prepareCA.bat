@@ -11,12 +11,12 @@
 ::
 
 @ECHO OFF
-
+		
 		
 	ECHO PKI-X509 - Prepare PKI structure and ROOT Certification Authority (CA)
 	ECHO Copyright MIT
 	ECHO https://sbuechler.de
-	ECHO.
+	ECHO.	
 
 
 	SET _ORIGINDIR=%cd%
@@ -35,56 +35,68 @@
 	cd /d %_BASISPFAD%
 	
 	if exist certs (
-		echo    '%_BASISPFAD%\certs' already exists. Skipping .. 
+		echo    '%cd%\certs' already exists. Skipping .. 
 	) else (
 		mkdir certs
 	)
 	
 	if exist crl (
-		echo    '%_BASISPFAD%\crl' already exists. Skipping .. 
+		echo    '%cd%\crl' already exists. Skipping .. 
 	) else (
 		mkdir crl
 	)
 	
 	if exist newcerts (
-		echo    '%_BASISPFAD%\newcerts' already exists. Skipping .. 
+		echo    '%cd%\newcerts' already exists. Skipping .. 
 	) else (
 		mkdir newcerts
 	)
 	
 	if exist private (
-		echo    '%_BASISPFAD%\private' already exists. Skipping .. 
+		echo    '%cd%\private' already exists. Skipping .. 
 	) else (
 		mkdir private
 	)
 	
 	if exist csr (
-		echo    '%_BASISPFAD%\csr' already exists. Skipping .. 
+		echo    '%cd%\csr' already exists. Skipping .. 
 	) else (
 		mkdir csr
 	)
 
 	:: Container that holds PKI structure
 	if exist index.txt (
-		echo    '%_BASISPFAD%\index.txt' already exists. Skipping .. 
+		echo    '%cd%\index.txt' already exists. Skipping .. 
 	) else (
 		type NUL > index.txt
 	)
 	
 	:: File that holds latest serial number
 	if exist serial (
-		echo    '%_BASISPFAD%\serial' already exists. Skipping .. 
+		echo    '%cd%\serial' already exists. Skipping .. 
 	) else (
 		echo 01 > serial
 	)
 
+	:: Copy ROOT CA config file
+	xcopy /y %_ORIGINDIR%\openssl.cfg %cd%
+
+	:: Replace placeholder path by valid path
+	(for /f "tokens=* delims==" %%a in (%_ORIGINDIR%\openssl.cfg) do (
+    if "%%a" == "dir               = C:/<path_to_your_pki_dir>" (
+            echo dir               = %_BASISPFAD%
+
+    ) else (
+        echo %%a
+    )    
+	))> %cd%\openssl.cfg
+	
+
+	ECHO.
+	ECHO    .. OK!
+	ECHO # In order to proceed with the creation of the ROOT CA, please run next script!
+	ECHO.
 
 	:: Go back to original directory
-	cd %_ORIGINDIR%
-
-	ECHO    .. OK!
-	ECHO.
-	ECHO # In order to proceed, please copy the file 'openssl.cfg' into folder '%_BASISPFAD%' and adjust the paths within this file!
-	ECHO.
-
+	cd /d %_ORIGINDIR%
 pause
