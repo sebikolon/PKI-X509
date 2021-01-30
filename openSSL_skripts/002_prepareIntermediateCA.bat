@@ -76,15 +76,14 @@
 
 	:: Copy INTERMEDIATE CA config file
 	xcopy /y %_ORIGINDIR%\%_INTERCONFIG% %cd%
-
-	:: Replace placeholder path by valid path
-	(for /f "tokens=* delims==" %%a in (%_ORIGINDIR%\%_INTERCONFIG%) do (
-    if "%%a" == "dir               = C:/<path_to_your_pki_dir>/intermediate" (
-            echo dir               = %cd%
-
-    ) else (
-        echo %%a
-    )    
+	
+	:: Replace placeholder path by valid path	
+	(for /f "tokens=1,2* delims==" %%a in (%_ORIGINDIR%\%_INTERCONFIG%) do (
+    if "%%b" == "<base_path_will_be_replaced_on_copying>/intermediate" (
+			echo %%a = %_BASISPFAD%/intermediate
+		) else (
+			echo %%a = %%b
+		)   
 	))> %cd%\%_INTERCONFIG%
 
 	ECHO.

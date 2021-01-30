@@ -81,14 +81,13 @@
 	:: Copy ROOT CA config file
 	xcopy /y %_ORIGINDIR%\openssl.cfg %cd%
 
-	:: Replace placeholder path by valid path
-	(for /f "tokens=* delims==" %%a in (%_ORIGINDIR%\openssl.cfg) do (
-    if "%%a" == "dir               = C:/<path_to_your_pki_dir>" (
-            echo dir               = %_BASISPFAD%
-
-    ) else (
-        echo %%a
-    )    
+	:: Replace placeholder path by chosen base path	
+	(for /f "tokens=1,2* delims==" %%a in (%_ORIGINDIR%\openssl.cfg) do (
+    if "%%b" == "<base_path_will_be_replaced_on_copying>" (
+			echo %%a = %_BASISPFAD%
+		) else (
+			echo %%a = %%b
+		)   
 	))> %cd%\openssl.cfg
 	
 
