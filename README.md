@@ -4,22 +4,23 @@ This repository contains *ready-to-run* batch scripts.
  Use them to create **your own PKI (Public Key Infrastructure)** including 
  - Creation of **Root-CA** (issues the Intermediate CA)
  - Creation of *several* **Intermediate-CAs** (issues server/client/OCSP certificates)
- - Running an **OCSP**-Responder (Incl. checking the validity of certificates)
- - Issuing **Server/Client** certificates
- - **Converting** certificates from *PEM* to *CRT* format
+ - Issuing **Server/Client** certificates (By default in *.pem* format)
+ - Creation of an **OCSP**-Responder (Incl. checking the validity of certificates)
+ - **Converting** certificates from *.pem* to *.crt* format
  - **Revoking** certificates using an OCSP responder or a CRL (Certificate Revocation List)
  - Creating **#PKCS12 keystores** including certificates and the entire *trust of chain*
 
-Your *Intermediate CA* is capable to issue as many client certificates as desired. Of course you can create **several** Intermediate CAs in order to structure your PKI!
+Hint: In the scripts, server and client/user certificates will all be issued by the *Intermediate CA* (not directly by the root CA). 
+The *Intermediate CA* is capable to issue as many client/user certificates as desired. Of course, **several** *Intermediate CA*s can be created in order to structure your PKI in a more granular way!
  
- Please make sure to keep your private keys (Especially Root-CA and Intermediate CAs) **top-secret**.
+ Please make sure to keep your private keys (Especially Root-CA and Intermediate CAs) **top-secret** all the time.
 
 ## Prerequisites
 The batch scripts are using a Windows portation of [OpenSSL](https://www.openssl.org/).
 
-1.  Download it [Win32 OpenSSL v1.1.1.d.exe](https://slproweb.com/download/Win32OpenSSL-1_1_1d.exe "Win32 OpenSSL v1.1.1.d") and install it
+1.  Download it ([Win32 OpenSSL v1.1.1.d.exe](https://slproweb.com/download/Win32OpenSSL-1_1_1d.exe "Win32 OpenSSL v1.1.1.d")) and install it
  
-2. Make sure to add the *bin* path to your user/system PATH variable: `C:\Program Files (x86)\OpenSSL-Win32\bin` so the scripts can find your openSSL binary
+2. Make sure to add the *bin* path to your user/system PATH variable: `C:\Program Files (x86)\OpenSSL-Win32\bin` so the scripts are able to detect your openSSL binary on runtime
 
 ## Configuration
 The files
@@ -27,42 +28,34 @@ The files
 - `openssl.cfg`
 - `openssl_inter.cfg`
 
-must be adjusted before creating the PKI at the following places:
+contain default values which are required for *OpenSSL* to work. They might be adjusted before creating the PKI. Apply your changes at least the following places:
 
-`openssl.cfg`:
+`openssl.cfg` (will issue only the *Intermediate CA*):
 ```
-  [ ROOTCA ]
-  dir = C:/<path_to_your_pki_dir>
   [ req_distinguished_name ]
-  0.organizationName_default  = MyEmployer
-  [ usr_cert ]
-  nsComment = "MyComment"
-  [ server_cert ]
-  nsComment = "MyComment"
+  0.organizationName_default  = myCompany
 ```
 
-`openssl_inter.cfg`:
+`openssl_inter.cfg` (will issue server/client certificates):
 ```
-  [ INTERMEDIATECA ]
-  dir = C:/<path_to_your_pki_dir>/intermediate
   [ req_distinguished_name ]
-  0.organizationName_default  = MyEmployer
+  0.organizationName_default  = myCompany
   [ usr_cert ]
-  nsComment = "MyComment"
+  nsComment = "User certificate"
   [ server_cert ]
-  nsComment = "MyComment"
+  nsComment = "Server certificate"
   crlDistributionPoints = URI:https://url/to/intermediate.crl.pem
   ```
   
-If you want to use **Multivalued-RDNs**, add them in file `openssl_inter.cfg`:
+Optional: If you want to use **Multivalued-RDNs**, add them in file `openssl_inter.cfg`:
 ```
 [ policy_loose ]
 newAttribute = optional
 ```
 
 ## Usage
-The scripts are sorted by their prefixes. 
+The scripts are sorted by their prefixes.
 
-*Setup your PKI* by executing the scripts *000_* to *003_* one-by-one. Take care when running them again within the same base folder - you will overwrite existing files!
+Start *setting up your PKI* by executing the scripts *000_* to *003_* one-by-one. Take care when running them again within the same root folder - you will overwrite existing files!
 
-The remaining scripts can be run as often as you want to.
+The otherö scripts can be run as often as you want to, e.g. to issue 1 server and several user certificates, or to revoke them.
