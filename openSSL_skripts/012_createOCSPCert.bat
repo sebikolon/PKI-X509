@@ -5,7 +5,7 @@
 ::		https://sbuechler.de
 ::		https://github.com/sebikolon/PKI-X509
 ::
-::		Last Release: 17 March 2020	
+::		Latest release: January 2021	
 ::
 :: ***************************************************************************************
 ::
@@ -22,7 +22,7 @@
     SET _INTER=intermediate
     SET _INTERCONFIG=openssl_inter.cfg
 	ECHO # Please choose the base directory you defined before (e.g. 'C:\myPKI').
-	SET /P _BASISPFAD= Type, then press ENTER:
+	SET /P _ROOTPATH= Type, then press ENTER:
 
     ECHO # Now please choose the name of the OCSP responder certificate (e.g. 'ocsp.myDomain.com').
 	SET /P _CERTNAME= Type, then press ENTER:
@@ -31,7 +31,7 @@
     :: Create an OCSP responder certificate :: 
     ECHO.
     ECHO # Creating an OCSP responder certificate ..
-    cd %_BASISPFAD%
+    cd %_ROOTPATH%
 
     :: Create a key pair
     openssl genrsa -aes256 -out %_INTER%/private/%_CERTNAME%.key.pem 4096

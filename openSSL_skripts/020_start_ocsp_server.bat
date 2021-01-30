@@ -5,7 +5,7 @@
 ::		https://sbuechler.de
 ::		https://github.com/sebikolon/PKI-X509
 ::
-::		Last Release: 17 March 2020	
+::		Latest release: January 2021	
 ::
 :: ***************************************************************************************
 ::
@@ -22,7 +22,7 @@
     SET _INTER=intermediate
     SET _INTERCONFIG=openssl_inter.cfg
 	ECHO # Please choose the base directory you defined before (e.g. 'C:\myPKI').
-	SET /P _BASISPFAD= Type, then press ENTER:
+	SET /P _ROOTPATH= Type, then press ENTER:
 
     ECHO # Now please type the name of the previously created OCSP responder certificate (e.g. 'ocsp.myDomain.com').
 	SET /P _OCSPCERT= Type, then press ENTER:
@@ -36,7 +36,7 @@
     ECHO # Starting the OCSP responders service ..
     ECHO # .. Do NOT close this window! ..
 
-    openssl ocsp -index %_BASISPFAD%\%_INTER%\index.txt -port %_PORT% -rkey %_BASISPFAD%\%_INTER%\private\%_OCSPCERT%.key.pem -rsigner %_BASISPFAD%\%_INTER%\certs\%_OCSPCERT%.cert.pem -CA %_BASISPFAD%\%_INTER%\certs\ca-chain.cert.pem -text 
+    openssl ocsp -index %_ROOTPATH%\%_INTER%\index.txt -port %_PORT% -rkey %_ROOTPATH%\%_INTER%\private\%_OCSPCERT%.key.pem -rsigner %_ROOTPATH%\%_INTER%\certs\%_OCSPCERT%.cert.pem -CA %_ROOTPATH%\%_INTER%\certs\ca-chain.cert.pem -text 
 
 
     :: Go back to original directory

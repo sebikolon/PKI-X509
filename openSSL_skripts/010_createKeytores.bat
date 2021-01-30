@@ -5,7 +5,7 @@
 ::		https://sbuechler.de
 ::		https://github.com/sebikolon/PKI-X509
 ::
-::		Last Release: 16 March 2020	
+::		Latest release: January 2021
 ::
 :: ***************************************************************************************
 ::
@@ -24,7 +24,7 @@
 	ECHO # Run this script for each certificate, you want to create a keystore for.
 
 	ECHO # Please choose the base directory you defined before (e.g. 'C:\myPKI').
-	SET /P _BASISPFAD= Type, then press ENTER:
+	SET /P _ROOTPATH= Type, then press ENTER:
 
     ECHO # Now please choose the name of your previously created client certificate (e.g. 'myClientCert').
 	SET /P _CERTNAME= Type, then press ENTER:
@@ -33,17 +33,17 @@
 	SET /P _KEYSTORENAME= Type, then press ENTER:
 
 
-	cd /d %_BASISPFAD%
+	cd /d %_ROOTPATH%
 
 	:: Create a new PKCS12 keystore :: 
 	echo # Creating a PKCS12 keystore ..
 	if exist %_INTER%\keystores (
 		ECHO.
-		echo # Directory '%_BASISPFAD%\%_INTER%\keystores' already exists ..
+		echo # Directory '%_ROOTPATH%\%_INTER%\keystores' already exists ..
 	) else (
 		mkdir %_INTER%\keystores
 		ECHO.
-		echo # Directory '%_BASISPFAD%\%_INTER%\keystores' was successfully created ..
+		echo # Directory '%_ROOTPATH%\%_INTER%\keystores' was successfully created ..
 	)
 	openssl pkcs12 -export -in %_INTER%\certs\%_CERTNAME%.cert.pem -inkey %_INTER%\private\%_CERTNAME%.key.pem -chain -CAfile %_INTER%\certs\ca-chain.cert.pem -name %_KEYSTORENAME% -out %_INTER%\keystores\%_KEYSTORENAME%.p12
 

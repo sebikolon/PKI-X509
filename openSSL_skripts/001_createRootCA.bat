@@ -5,7 +5,7 @@
 ::		https://sbuechler.de
 ::		https://github.com/sebikolon/PKI-X509
 ::
-::		Last Release: 16 March 2020	
+::		Latest release: January 2021	
 ::
 :: ***************************************************************************************
 ::
@@ -20,9 +20,9 @@
 	
 	SET _ORIGINDIR=%cd%
 	ECHO # Please choose the base directory you defined before (e.g. 'C:\myPKI').
-	SET /P _BASISPFAD= Type, then press ENTER:
+	SET /P _ROOTPATH= Type, then press ENTER:
 	
-	cd /d %_BASISPFAD%
+	cd /d %_ROOTPATH%
 	
 	ECHO.
 	ECHO # Creating ROOT CA and according files ..

@@ -5,7 +5,7 @@
 ::		https://sbuechler.de
 ::		https://github.com/sebikolon/PKI-X509
 ::
-::		Latest Release: January 2021	
+::		Latest release: January 2021	
 ::
 :: ***************************************************************************************
 ::
