@@ -5,7 +5,7 @@
 ::		https://sbuechler.de
 ::		https://github.com/sebikolon/PKI-X509
 ::
-::		Last Release: 16 March 2020	
+::		Latest release: January 2021
 ::
 :: ***************************************************************************************
 ::
@@ -22,7 +22,7 @@
     SET _INTER=intermediate
     SET _INTERCONFIG=openssl_inter.cfg
 	ECHO # Please choose the base directory you defined before (e.g. 'C:\myPKI').
-	SET /P _BASISPFAD= Type, then press ENTER:
+	SET /P _ROOTPATH= Type, then press ENTER:
 
     ECHO # Now please choose the name of your new client certificate (e.g. 'myClientCert').
 	SET /P _CERTNAME= Type, then press ENTER:
@@ -34,7 +34,7 @@
     ::  Create a client certificate :: 
     ECHO.
 	ECHO # Creating a client certificate ..  
-    cd /d %_BASISPFAD%
+    cd /d %_ROOTPATH%
 
      ::  Create a key pair :: 
     openssl genrsa  -out %_INTER%\private\%_CERTNAME%.key.pem 2048

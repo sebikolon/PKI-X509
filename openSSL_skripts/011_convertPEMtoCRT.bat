@@ -5,7 +5,7 @@
 ::		https://sbuechler.de
 ::		https://github.com/sebikolon/PKI-X509
 ::
-::		Last Release: 17 March 2020	
+::		Latest release: January 2021	
 ::
 :: ***************************************************************************************
 ::
@@ -22,7 +22,7 @@
     SET _INTER=intermediate
     SET _INTERCONFIG=openssl_inter.cfg
 	ECHO # Please choose the base directory you defined before (e.g. 'C:\myPKI').
-	SET /P _BASISPFAD= Type, then press ENTER:
+	SET /P _ROOTPATH= Type, then press ENTER:
 
     ECHO # Now please choose the name of the certificate to be converted (e.g. 'myClientCert').
 	SET /P _CERTNAME= Type, then press ENTER:
@@ -32,13 +32,13 @@
     ECHO.
     ECHO # Converting the certificate from .PEM to .CRT ..
 
-    openssl x509 -outform der -in %_BASISPFAD%\%_INTER%\certs\%_CERTNAME%.cert.pem -out %_BASISPFAD%\%_INTER%\certs\%_CERTNAME%.crt
+    openssl x509 -outform der -in %_ROOTPATH%\%_INTER%\certs\%_CERTNAME%.cert.pem -out %_ROOTPATH%\%_INTER%\certs\%_CERTNAME%.crt
 
     :: Go back to original directory
 	cd %_ORIGINDIR%
 
 	ECHO    .. OK!
-    ECHO # The converted certificate was stored here: '%_BASISPFAD%\%_INTER%\certs\%_CERTNAME%.crt'
+    ECHO # The converted certificate was stored here: '%_ROOTPATH%\%_INTER%\certs\%_CERTNAME%.crt'
 	ECHO.	  
 
  pause
