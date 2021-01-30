@@ -5,7 +5,7 @@
 ::		https://sbuechler.de
 ::		https://github.com/sebikolon/PKI-X509
 ::
-::		Last Release: 16 March 2020	
+::		Latest Release: January 2021	
 ::
 :: ***************************************************************************************
 ::
@@ -22,13 +22,13 @@
     SET _INTER=intermediate
     SET _INTERCONFIG=openssl_inter.cfg
 	ECHO # Please choose the base directory you defined before (e.g. 'C:\myPKI').
-	SET /P _BASISPFAD= Type, then press ENTER:
+	SET /P _ROOTPATH= Type, then press ENTER:
 
     ::  Create an intermediate CA ::
     ECHO.
 	ECHO # Creating INTERMEDIATE CA and according files ..    
-    mkdir %_BASISPFAD%\%_INTER%
-    cd /d %_BASISPFAD%\%_INTER%
+    mkdir %_ROOTPATH%\%_INTER%
+    cd /d %_ROOTPATH%\%_INTER%
     
     if exist certs (
 		echo    '%cd%\certs' already exists. Skipping .. 
@@ -80,7 +80,8 @@
 	:: Replace placeholder path by valid path	
 	(for /f "tokens=1,2* delims==" %%a in (%_ORIGINDIR%\%_INTERCONFIG%) do (
     if "%%b" == "<base_path_will_be_replaced_on_copying>/intermediate" (
-			echo %%a = %_BASISPFAD%/intermediate
+			:: Backslashes must be replaced by forwards slashes (unix-style)
+			echo %%a = %_ROOTPATH:\=/%/intermediate
 		) else (
 			echo %%a = %%b
 		)   

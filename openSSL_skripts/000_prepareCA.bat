@@ -5,7 +5,7 @@
 ::		https://sbuechler.de
 ::		https://github.com/sebikolon/PKI-X509
 ::
-::		Last Release: 06 March 2020	
+::		Latest Release: January 2021
 ::
 :: ***************************************************************************************
 ::
@@ -21,18 +21,18 @@
 
 	SET _ORIGINDIR=%cd%
 	ECHO # Please choose the new base directory, where all data belonging to your PKI will be stored (e.g. 'C:\myPKI').
-	SET /P _BASISPFAD= Type, then press ENTER:
+	SET /P _ROOTPATH= Type, then press ENTER:
 	
 	ECHO.
 	ECHO # Creating directories and default files ..
 	
 	:: Create the base directory and sub folders
-	if exist %_BASISPFAD% (
-		echo    '%_BASISPFAD%' already exists. Skipping .. 
+	if exist %_ROOTPATH% (
+		echo    '%_ROOTPATH%' already exists. Skipping .. 
 	) else (
-		mkdir %_BASISPFAD%
+		mkdir %_ROOTPATH%
 	)
-	cd /d %_BASISPFAD%
+	cd /d %_ROOTPATH%
 	
 	if exist certs (
 		echo    '%cd%\certs' already exists. Skipping .. 
@@ -84,7 +84,8 @@
 	:: Replace placeholder path by chosen base path	
 	(for /f "tokens=1,2* delims==" %%a in (%_ORIGINDIR%\openssl.cfg) do (
     if "%%b" == "<base_path_will_be_replaced_on_copying>" (
-			echo %%a = %_BASISPFAD%
+			:: Backslashes must be replaced by forwards slashes (unix-style)
+			echo %%a = %_ROOTPATH:\=/%
 		) else (
 			echo %%a = %%b
 		)   
