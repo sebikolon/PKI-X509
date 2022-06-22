@@ -18,9 +18,9 @@ The *Intermediate CA* is capable to issue as many client/user certificates as de
 ## Prerequisites
 The batch scripts are using a Windows portation of [OpenSSL](https://www.openssl.org/).
 
-1.  Download it ([Win32 OpenSSL v1.1.1.d.exe](https://slproweb.com/download/Win32OpenSSL-1_1_1d.exe "Win32 OpenSSL v1.1.1.d")) and install it
+1.  Download the latest version (e.g. [Win64 OpenSSL v3.0.3 Light](https://slproweb.com/products/Win32OpenSSL.html "Win64 OpenSSL")) and install it
  
-2. Make sure to add the *bin* path to your user/system PATH variable: `C:\Program Files (x86)\OpenSSL-Win32\bin` so the scripts are able to detect your openSSL binary on runtime
+2. Make sure to add the *bin* path to your user/system PATH variable: `C:\Program Files (x86)\OpenSSL-Win64\bin` so the scripts are able to detect your openSSL binary on runtime
 
 ## Configuration
 The files
