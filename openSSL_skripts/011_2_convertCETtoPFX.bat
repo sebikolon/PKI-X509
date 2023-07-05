@@ -21,6 +21,7 @@
  	SET _ORIGINDIR=%cd%
     SET _INTER=intermediate
     SET _INTERCONFIG=openssl_inter.cfg
+
 	ECHO # Please choose the base directory you defined before (e.g. 'C:\myPKI').
 	SET /P _ROOTPATH= Type, then press ENTER:
 
@@ -28,11 +29,11 @@
 	SET /P _CERTNAME= Type, then press ENTER:
 
 
-    :: Convert the certificate from CET to PFX :: 
+    :: Convert the certificate from CRT to PFX :: 
     ECHO.
-    ECHO # Converting the certificate from .CET to .PFX ..
+    ECHO # Converting the certificate from .CRT to .PFX ..
 
-    openssl pkcs12 –export -out %_ROOTPATH%\%_INTER%\certs\%_CERTNAME%.PFX –inkey %_ROOTPATH%\%_INTER%\private\%_CERTNAME%.key -in %_ROOTPATH%\%_INTER%\certs\%_CERTNAME%.cer 
+    openssl pkcs12 –export -out %_ROOTPATH%\%_INTER%\certs\%_CERTNAME%.PFX –inkey %_ROOTPATH%\%_INTER%\private\%_CERTNAME%.key.pem -in %_ROOTPATH%\%_INTER%\certs\%_CERTNAME%.crt 
 
     :: Go back to original directory
 	cd %_ORIGINDIR%
